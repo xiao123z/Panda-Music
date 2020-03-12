@@ -1,0 +1,11 @@
+*{
+    margin: 0;
+    padding: 0;
+    
+}
+html,body{
+    font-family: PingFang SC,STHeitiSC-Light,Helvetica-Light,arial,sans-serif,Droid Sans Fallback;
+}
+ul,ol{
+    list-style: none;
+}
