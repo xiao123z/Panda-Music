@@ -129,7 +129,6 @@ export default {
     },
     mounted() {
           let wrapper =this.$refs.wrapper
-         console.log(this.$refs.wrapper);
          this.bs=new BS(wrapper,{
         click:true,
       })

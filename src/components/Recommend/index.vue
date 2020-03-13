@@ -5,7 +5,7 @@
         <banner :banners="list"></banner>
          <div class="title">热门歌单推荐</div>
 <ul>
-    <li v-for="(item,index) in recommendList" :key="index">
+    <li v-for="(item,index) in recommendList" :key="index" @click="goRecommendSong(item.dissid)">
                 <img  v-lazy="item.imgurl" alt="">
            <div class="text">
                <p class="name">{{item.creator.name}}</p>
@@ -15,6 +15,10 @@
 </ul>
       </div>
           </div>
+              <transition enter-active-class="animated slideInRight"
+    leave-active-class="animated slideOutRight">
+    <router-view></router-view>
+    </transition>
     </div>
 </template>
 <script>
@@ -34,9 +38,14 @@ export default {
         }
     },
     methods:{
+goRecommendSong(dissid){
+this.$router.push(`/Recommend/${dissid}`)
+},
+
  initBs(){
       let wrapper = this.$refs.wrapper
     this.bs=  new BS(wrapper,{
+      click:true,
   pullDownRefresh: {
           threshold: 50,
           stop: 20

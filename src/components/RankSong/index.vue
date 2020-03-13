@@ -2,7 +2,7 @@
   <div class='detail'>
     <!-- 头部导航 -->
      <div class='top'>
-       <span @click='back'><i class="iconfont icon-zuojiantou"></i></span>
+       <span ><i @click='back' class="iconfont icon-zuojiantou"></i></span>
        <span class="title">{{name}}</span>
      </div>
      <!-- 头像 -->

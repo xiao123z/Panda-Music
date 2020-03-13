@@ -2,7 +2,7 @@
   <div class='detail'>
     <!-- 头部导航 -->
      <div class='top'>
-       <span ><i @click='back' class="iconfont icon-zuojiantou"></i></span>
+       <span @click='back'><i   class="iconfont icon-zuojiantou"></i></span>
        <span class="title">{{name}}</span>
      </div>
      <!-- 头像 -->
@@ -23,7 +23,7 @@
               @click="openPlay(index)"
               >
                <h2>{{item.songname}}</h2>
-               <p>{{name}}.{{item.albumname}}</p>
+             <span v-for="(ioo,il) in item.singer" :key="il">{{ioo.name}}</span>.<span>{{item.songname}}</span>
             </li>
           </ul>
         </div>
@@ -36,7 +36,7 @@
 </template>
 <script>
 import BS from 'better-scroll'
-import {getSongByMid,getSongUrlByMid} from '../../api/api';
+import {recommendSong,getSongUrlByMid} from '../../api/api';
 import { mapMutations, mapState } from 'vuex'
 export default {
    ...mapState(['song']),
@@ -52,9 +52,8 @@ export default {
  
   methods:{
     ...mapMutations(['addSongList','changeCurrendIndex','changeScreen',"addSong"]),
-    back(){
-   
-
+   back(){
+          console.log(this);
       this.$router.go(-1)
     },
     suiji(){
@@ -111,9 +110,6 @@ export default {
              img.style.paddingTop='70%'
              img.style.height=0
             shadow.style.display='block'
-
-           
-
           }
         }
       })
@@ -122,24 +118,22 @@ export default {
       let result =[] 
       let mids=[]
       result=list.map((item,index)=>{
-        let {albummid,albumname,singer,songmid,songname} =item.musicData
+        let {albummid,albumname,singer,songmid,songname} =item
         let albumUrl=`https://y.gtimg.cn/music/photo_new/T002R300x300M000${albummid}.jpg?max_age=2592000`
        mids.push(songmid)
-        return {albummid,albumname,singer,songmid,songname,albumUrl} 
+        return {albummid,albumname,singer,songmid,songname,albumUrl}
       })
       return {result,mids} 
     
-    
+
     }
      
   },
-
   async created(){
-    let {singermid} =this.$route.params
+    let {recommendList} =this.$route.params
     // 根据歌手mid 发起请求获取数据
-    
-    let data = await getSongByMid(singermid) 
-    let {result,mids}= this.handleList(data.data.list) 
+    let data = await recommendSong(recommendList) 
+    let {result,mids}= this.handleList(data.cdlist[0].songlist) 
     // 通过接口 将mids 歌曲的媒体id 换成 音乐地址 之后将数据进行合并
     let {urls} =  await getSongUrlByMid(mids)
     let files=[]
@@ -150,8 +144,8 @@ export default {
      }
     }
     this.list = files
-    this.name = data.data.singer_name
-    this.avator =`https://y.gtimg.cn/music/photo_new/T001R300x300M000${singermid}.jpg?max_age=2592000`
+    this.name = data.cdlist[0].dissname
+    this.avator =data.cdlist[0].logo
     this.$nextTick(()=>{
       this.initBs()
     })
@@ -196,7 +190,8 @@ export default {
     .title{
         font-size: @fs-l;
         position: absolute;
-        left:37%;
+        left: 10%;
+    top: -18%;
     }
   }
   // 头像
@@ -255,7 +250,7 @@ export default {
         height: 20px;
         font-size: @fs-s;
        }
-       p{
+       span{
         margin-top:3px; 
         height:20px ;
          font-size: @fs-s;
